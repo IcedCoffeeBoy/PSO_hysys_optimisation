@@ -63,7 +63,7 @@ def tac_column(Problem):
     # * Utility Costs *********************************************************
     WATER = 0.354 * (1 / 1e9) * 3600 * 1e3  # $/GJ [30 ºC to 40-45 ºC] (R.Turton 4º Ed. Table 8.3) ==> [$ /kW·h]
     STEAM = 14.04 * (1 / 1e9) * 3600 * 1e3  # $/GJ Low Pressure Steam [5barg, 160ºC] (R.Turton 4º Ed. Table 8.3) ==> [$ /kW·h]
-    STEAM_HIGH = 17.70  * (1 / 1e9) * 3600 * 1e3
+    STEAM_HP = 17.70  * (1 / 1e9) * 3600 * 1e3
     YEAR = 8000  # Operating hours per year
 
     # * Equip Cost Constants (K). See Appendix A - R .Turton ******************
@@ -96,7 +96,7 @@ def tac_column(Problem):
     coolingWater_Cost = Qcond * WATER * YEAR
 
     # * Steam Cost [$/yr] *****************************************************
-    Steam_Cost = Qreb * STEAM_HIGH * YEAR
+    Steam_Cost = Qreb * STEAM_HP * YEAR
 
     # 05 # Capital Cost ##########################################################
 

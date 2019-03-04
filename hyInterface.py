@@ -93,6 +93,7 @@ def hy_Dist_Col_Object(Problem, *varargin):
 
     # 08.1.1.2 Access to Feed stream object of the Main Tray Section
     DistColumn.FeedMainTS = DistColumn.FeedStreams.Item('Feed')
+    DistColumn.DrawMainTS = DistColumn.ColumnFlowsheet.LiquidProducts.Item('Side Draw')
 
     # 08.2. Material Streams
     class MaterialStream:
@@ -101,6 +102,7 @@ def hy_Dist_Col_Object(Problem, *varargin):
     MaterialStream.Distillate = HyMaterialStream.Item('Distillate')
     MaterialStream.Bottoms = HyMaterialStream.Item('Bottoms')
     MaterialStream.Feed = HyMaterialStream.Item('Feed')
+    MaterialStream.Side = HyMaterialStream.Item('Side Draw')
 
     # 08.3. Energy Streams
     class EnergyStream:

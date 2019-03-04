@@ -23,11 +23,13 @@ def distColumn_model(x, Problem):
 
     NR = x[2]  # * NR: Number of active trays in rectifying section
     NS = x[3]  # * NS: Number of active trays in stripping  section
-    FT = x[4]  # Feed Temperature
+    ND = x[4]  # * ND: Number of active trays in drawing section
+    FT = x[5]  # Feed Temperature
+
 
     HyObject = Problem.HyObject  # Recover Hysys Objects from structure Problem
-    NT = (NR + NS) + 1  # Total number of active trays
-    Feed_S = NR + 1  # Feed location
+    NT = (NR + NS + ND) + 1  # Total number of active trays
+    Feed_S = NR + ND + 1  # Feed location
 
     # 01 Change Column Topology and Column specifications (degrees of freedom)
     HyObject = Problem.HyObject  # Recover Hysys Objects from structure Problem
@@ -44,6 +46,7 @@ def distColumn_model(x, Problem):
 
     # Feed location
     HyObject.DistColumn.Main_TS.SpecifyFeedLocation(HyObject.DistColumn.FeedMainTS, Feed_S)
+    HyObject.DistColumn.Main_TS.SpecifyDrawLocation(HyObject.DistColumn.DrawMainTS, ND + 1)
 
     # Reflux Ratio
     HyObject.DistColumn.Column.ColumnFlowsheet.Specifications.Item('Reflux Ratio').GoalValue = RR

@@ -9,11 +9,11 @@ from ConventionalDistillationColumn.print_pso import print_results
 
 def pso_gbest(objfnc, lb, ub, intVar, *arg):
     # Standard PSO algorithm (gbest) for minimizing a n dimensional function
-    #  Input argurments:
+    #  Input args:
     # objfnc:  objective function
     # lb:  array containing lower bound on independent variables (len of array determines the dimensions)
     # ub: array containing upper bound on independent variables (len of array determines the dimensions)
-    # intVar: array containing the index of the interger (indpendent) variables
+    # intVar: array containing the index of the integer (independent) variables
     #
     # returns: Result Class
     # 				Result.best_fitness = gbest_fitness

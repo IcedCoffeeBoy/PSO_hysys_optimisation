@@ -13,6 +13,9 @@ HyObject = hy_Dist_Col_Object(Problem)
 # HyObject.MaterialStream.Distillate.Pressure.SetValue(1.5,"atm")
 # print(HyObject.MaterialStream.Distillate.ComponentMolarFractionValue)
 # print(HyObject.DistColumn.FeedMainTS.Temperature)
-print(HyObject.MaterialStream.Feed.Temperature.SetValue(100,'C'))
-
+# print(HyObject.MaterialStream.Feed.Temperature.SetValue(100,'C'))
 # HyObject.DistColumn.FeedMainTS.Temperature =100
+
+print(HyObject.DistColumn.ColumnFlowsheet.LiquidProducts.Item('Side Draw'))
+
+HyObject.DistColumn.Main_TS.SpecifyDrawLocation(HyObject.DistColumn.ColumnFlowsheet.LiquidProducts.Item('Side Draw'), 2)

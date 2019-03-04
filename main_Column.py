@@ -72,9 +72,9 @@ hy_filename = 'Test_Column.hsc'
 hy_best_model_filename = 'Best_Solution_Test_Column.hsc'
 
 # # 03 Bounds on the conditional trays
-#      RR   Pres NR  NS Feed_Temp
-lb = [0.1,  101, 10, 10,  100]
-ub = [  3,  200, 30, 30,  130]
+#      CR   Pres NR  NS  ND  Feed_Temp
+lb = [ 1,  101, 5,  5,  5, 100]
+ub = [ 5,  200, 30, 30, 30, 130]
 
 # # 04 Binary variables index
 IntVars = [2, 3]
