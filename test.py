@@ -17,5 +17,4 @@ HyObject = hy_Dist_Col_Object(Problem)
 # HyObject.DistColumn.FeedMainTS.Temperature =100
 
 print(HyObject.DistColumn.ColumnFlowsheet.LiquidProducts.Item('Side Draw'))
-
-HyObject.DistColumn.Main_TS.SpecifyDrawLocation(HyObject.DistColumn.ColumnFlowsheet.LiquidProducts.Item('Side Draw'), 2)
+print(HyObject.MaterialStream.Bottoms.MassFlow.GetValue('kg/h'))

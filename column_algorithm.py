@@ -17,7 +17,7 @@ import time
 
 def distColumn_model(x, Problem):
     # Independent Variables
-    RR = x[0]  # * RR: Reflux Ratio
+    CR = x[0]  # * RR: Reflux Ratio
     # BR = x[1]  # * BR: Boil up Ratio
     P = x[1]  # * P: Condenser Pressure
 
@@ -49,7 +49,7 @@ def distColumn_model(x, Problem):
     HyObject.DistColumn.Main_TS.SpecifyDrawLocation(HyObject.DistColumn.DrawMainTS, ND + 1)
 
     # Reflux Ratio
-    HyObject.DistColumn.Column.ColumnFlowsheet.Specifications.Item('Reflux Ratio').GoalValue = RR
+    HyObject.DistColumn.Column.ColumnFlowsheet.Specifications.Item('Comp Recovery').GoalValue = CR
 
     # Feed Temperature
     HyObject.MaterialStream.Feed.Temperature.SetValue(FT, 'C')

@@ -167,6 +167,13 @@ def tac_column(Problem):
 
     # ============================================== END TAC calculations #####
 
+
+    # Revenue from selling product PG
+    Product_MassFlow = HyObject.MaterialStream.Bottoms.MassFlow.GetValue('kg/h')
+    PG_price = 2645/1e3 #$2,645/tonne PG
+    PG_sale = Product_MassFlow * PG_price * YEAR * 1e-6
+
+
     class ColumnCost:
         pass
 
@@ -177,6 +184,6 @@ def tac_column(Problem):
     ColumnCost.condenser = condenser_CBM
     ColumnCost.reboiler = reboiler_CBM
     ColumnCost.F = F
-    ColumnCost.TAC = TAC
+    ColumnCost.TAC = TAC - PG_sale
 
     return (ColumnCost)
