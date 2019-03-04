@@ -35,7 +35,7 @@ def pso_gbest(objfnc, lb, ub, intVar, *arg):
     swarm_size = 20  # number of the swarm particles
 
     # * Termination Conditions
-    maxIter = 30  # maximum number of iterations
+    maxIter = 10  # maximum number of iterations
     maxFO = 1e5  # maximun number of function evaluations
 
     maxIterNoImprov = 1e5  # maximun number of iterations without improving the objective function

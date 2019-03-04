@@ -16,13 +16,14 @@ import time
 
 
 def distColumn_model(x, Problem):
-
     # Independent Variables
     RR = x[0]  # * RR: Reflux Ratio
-    P =  x[1]  # * P: Condenser Pressure
+    # BR = x[1]  # * BR: Boil up Ratio
+    P = x[1]  # * P: Condenser Pressure
 
     NR = x[2]  # * NR: Number of active trays in rectifying section
     NS = x[3]  # * NS: Number of active trays in stripping  section
+    FT = x[4]  # Feed Temperature
 
     HyObject = Problem.HyObject  # Recover Hysys Objects from structure Problem
     NT = (NR + NS) + 1  # Total number of active trays
@@ -31,17 +32,12 @@ def distColumn_model(x, Problem):
     # 01 Change Column Topology and Column specifications (degrees of freedom)
     HyObject = Problem.HyObject  # Recover Hysys Objects from structure Problem
 
-    ## Pause the hysys solver to avoid generating error
-    HyObject.HySolver.CanSolve = False
-
     ##Tower pressure
+    HyObject.HySolver.CanSolve = False  ## Pause the hysys solver to avoid generating error
     DeltaP = (0.6895 * NT + 20)
     HyObject.MaterialStream.Bottoms.Pressure.SetValue(P + DeltaP, "kPa")
     HyObject.MaterialStream.Distillate.Pressure.SetValue(P, "kPa")
-
-    ## Resume Solver
-    HyObject.HySolver.CanSolve = True
-
+    HyObject.HySolver.CanSolve = True  ## Resume Solver
 
     # Total number of active trays
     HyObject.DistColumn.Main_TS.NumberOfTrays = NT
@@ -52,14 +48,16 @@ def distColumn_model(x, Problem):
     # Reflux Ratio
     HyObject.DistColumn.Column.ColumnFlowsheet.Specifications.Item('Reflux Ratio').GoalValue = RR
 
+    # Feed Temperature
+    HyObject.MaterialStream.Feed.Temperature.SetValue(FT, 'C')
 
-
-
+    # Boilup Ratio
+    # HyObject.DistColumn.Column.ColumnFlowsheet.Specifications.Item('Boilup Ratio').GoalValue = BR
     ##-------------------------------------------------------------------------------------------------##
 
     # 02 Run Aspen Hysys model with new topology
     HyObject.DistColumn.ColumnFlowsheet.Run()  # Run Aspen Hysy model
-    time.sleep(0.8)
+    time.sleep(0.3)
 
     # 03 Check model convergence
     RunStatus = HyObject.HyApp.ActiveDocument.Flowsheet.Operations.Item(0).ColumnFlowsheet.CfsConverged
@@ -70,24 +68,17 @@ def distColumn_model(x, Problem):
         ColumnCost = tac_column(Problem)  # from Test_Column_ObjFnc
 
         # 05 Check purity constraints
-        Tol_dist = 0.001  # Molar Fraction Impurites
-        Bz_Bottoms = 0.001
-        Comp_frac_Tol_dist = HyObject.MaterialStream.Distillate.ComponentMolarFractionValue[1]
-        Comp_frac_Bz_Bott = HyObject.MaterialStream.Bottoms.ComponentMolarFractionValue[0]
+        PG_purity = 0.95
+        Comp_frac_PG_Bott = HyObject.MaterialStream.Bottoms.ComponentMolarFractionValue[2]
 
-        if Comp_frac_Tol_dist > Tol_dist:
-            w1 = (Comp_frac_Tol_dist - Tol_dist) * 1e5
-        else:
-            w1 = 0
+        w1 = 0
 
-        if Comp_frac_Bz_Bott > Bz_Bottoms:
-            w2 = (Comp_frac_Bz_Bott - Bz_Bottoms) * 1e5
-        else:
-            w2 = 0
+        if Comp_frac_PG_Bott < PG_purity:
+            w1 = (PG_purity - Comp_frac_PG_Bott) * 1e10
 
         # Total Annual Cost + penalty terms
 
-        TAC = ColumnCost.TAC + w1 + w2
+        TAC = ColumnCost.TAC + w1
     else:  # In case model does not converge
 
         TAC = 1e5

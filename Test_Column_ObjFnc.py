@@ -44,7 +44,8 @@ def tac_column(Problem):
     Qreb = EnergyStream.Qreb.HeatFlow.GetValue('kW')  # Reboiler Duty
 
     # 03 # Run Aspen Hysys Script "Col_diam_V8.SCP" to update column diameter
-    #    Problem.HyObject.HyCase.Application.PlayScript(os.path.abspath('Column_Diameter.SCP'))
+    #Problem.HyObject.HyCase.Application.PlayScript(os.path.abspath('Column_Diameter.SCP'))
+
     column_diameter = max(HyObject.HyCase.UtilityObjects.Item('Tray Sizing-1').DiameterValue)  # [m]
 
     # >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>><<<< User Inputs
@@ -62,6 +63,7 @@ def tac_column(Problem):
     # * Utility Costs *********************************************************
     WATER = 0.354 * (1 / 1e9) * 3600 * 1e3  # $/GJ [30 ºC to 40-45 ºC] (R.Turton 4º Ed. Table 8.3) ==> [$ /kW·h]
     STEAM = 14.04 * (1 / 1e9) * 3600 * 1e3  # $/GJ Low Pressure Steam [5barg, 160ºC] (R.Turton 4º Ed. Table 8.3) ==> [$ /kW·h]
+    STEAM_HIGH = 17.70  * (1 / 1e9) * 3600 * 1e3
     YEAR = 8000  # Operating hours per year
 
     # * Equip Cost Constants (K). See Appendix A - R .Turton ******************
@@ -82,7 +84,7 @@ def tac_column(Problem):
     # * Heater ****************************************************************
     Uheater = 820  # [W/(m2 K)] 
     Tstm = 160  # Low Pressure Steam temperature (R.Turton 4º Ed. Table 8.3)
-
+    Tstm_high = 254 #High Pressure Steam Tempature
     # Tower Column
     tray_Spacing = 0.6096  # [m]    
 
@@ -94,7 +96,7 @@ def tac_column(Problem):
     coolingWater_Cost = Qcond * WATER * YEAR
 
     # * Steam Cost [$/yr] *****************************************************
-    Steam_Cost = Qreb * STEAM * YEAR
+    Steam_Cost = Qreb * STEAM_HIGH * YEAR
 
     # 05 # Capital Cost ##########################################################
 
@@ -139,9 +141,8 @@ def tac_column(Problem):
     condenser_CBM = condenser_CBM_old * UpdateFactor  # [$] ================
 
     # * Column Reboiler *******************************************************
-    inc_T_reb = Tstm - TB
+    inc_T_reb = Tstm_high - TB
     reboiler_area = Qreb / (Uheater * inc_T_reb) * 1e3  # *1e3 porque U esta en W.
-
 
     # Purchase cost  for base conditions
     reboiler_Cp0 = 10 ** (Khx[0] + Khx[1] * np.log10(reboiler_area) +  Khx[2] * (np.log10(reboiler_area) ** 2))
@@ -159,7 +160,7 @@ def tac_column(Problem):
     Ccap = column_CBM + tray_CBM + condenser_CBM + reboiler_CBM
 
     # * Annualization factor (R. Smith)
-    F = i * (1 + i) ** n / ((1 + i) ** n - 1);
+    F = i * (1 + i) ** n / ((1 + i) ** n - 1)
 
     # * TAC ===================================================================
     TAC = (Cop + Ccap * F) * 1e-6  # [MM $/yr]

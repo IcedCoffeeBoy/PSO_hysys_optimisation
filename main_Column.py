@@ -66,15 +66,15 @@ from ConventionalDistillationColumn.pso_column import distCol_optimization
 # # User inputs >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
 # # 01 Hysys file name
-hy_filename = 'PG_separation.hsc'
+hy_filename = 'Test_Column.hsc'
 
 # # 02
 hy_best_model_filename = 'Best_Solution_Test_Column.hsc'
 
 # # 03 Bounds on the conditional trays
-#      RR Press NR  NS
-lb = [0, 101.325, 10, 10]
-ub = [10, 200, 30, 30]
+#      RR   Pres NR  NS Feed_Temp
+lb = [0.1,  101, 10, 10,  100]
+ub = [  3,  200, 30, 30,  130]
 
 # # 04 Binary variables index
 IntVars = [2, 3]

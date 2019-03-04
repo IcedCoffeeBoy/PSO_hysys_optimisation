@@ -1,0 +1,1 @@
+a = actxserver('Hysys.Application');
