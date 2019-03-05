@@ -1,21 +1,5 @@
-# -*- coding: utf-8 -*-
-
 import os
 import win32com.client as win32
-
-"""
-
-
-# -------------------------------------------------------------------------
-#   SIMULATION-BASED OPTIMIZATION OF A SINGLE CONVENTIONAL DISTILLATION 
-#        COLUMN USING THE PARTICLE SWARM OPTIMIZATION ALGORITHM
-#--------------------------------------------------------------------------
-#                                      Juan Javaloyes Antón. Sep 2016 
-#--------------------------------------------------------------------------
-# # 03 # Aspen Hysys Python Interface - Conventional Distillation Column Test
-#--------------------------------------------------------------------------
-
-"""
 
 
 # >>>>>>>>>>>>>>>[ Aspen Hysys - Python Interface ]>>>>>>>>>>>>>>> > User inputs

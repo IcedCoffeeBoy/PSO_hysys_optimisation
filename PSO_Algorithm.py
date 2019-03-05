@@ -1,5 +1,3 @@
-# coding: utf-8
-
 import numpy as np
 import time
 import datetime as dt
@@ -8,25 +6,6 @@ from ConventionalDistillationColumn.print_pso import print_results
 
 
 def pso_gbest(objfnc, lb, ub, intVar, *arg):
-    # Standard PSO algorithm (gbest) for minimizing a n dimensional function
-    #  Input args:
-    # objfnc:  objective function
-    # lb:  array containing lower bound on independent variables (len of array determines the dimensions)
-    # ub: array containing upper bound on independent variables (len of array determines the dimensions)
-    # intVar: array containing the index of the integer (independent) variables
-    #
-    # returns: Result Class
-    # 				Result.best_fitness = gbest_fitness
-    # 				Result.x_best       = gbest_x
-    # 				Result.iterations   = n_iter
-    # 				Result.FO_eval      = FO_eval
-    # 				Result.error_x      = error_x
-    # 				Result.error_fnc    = error_fnc
-    # 				Result.exit         = termination
-    #
-    #  Author: Juan Javaloyes Antón & FJ Navarro-Brull (Sept 2016)
-    #     License: BSD-CL 3 javaloyes.juan@gmail.com
-    #     More info at: https://github.com/CAChemE/stochastic-optimization
 
     Problem = arg[0]
 
@@ -35,7 +14,7 @@ def pso_gbest(objfnc, lb, ub, intVar, *arg):
     swarm_size = 20  # number of the swarm particles
 
     # * Termination Conditions
-    maxIter = 10  # maximum number of iterations
+    maxIter = 30  # maximum number of iterations
     maxFO = 1e5  # maximun number of function evaluations
 
     maxIterNoImprov = 1e5  # maximun number of iterations without improving the objective function
@@ -47,7 +26,7 @@ def pso_gbest(objfnc, lb, ub, intVar, *arg):
     # * PSO parameters
     inertia_w = 0.72  # Inertia weigth
     acceleration_c1 = 1.49  # Acceleration coefficient (cognitive)
-    acceleration_c2 = 1.49  # Acceleraton coefficient (social)
+    acceleration_c2 = 1.49  # Acceleration coefficient (social)
     v_max = 2  # Maximun velocity in absolute value
     break_coeff = 0.05  # Break factor for the worst particle
     Red_acceleration_c1 = 2  # Reduction factor of accelaration c1 coefficient for the worst particle

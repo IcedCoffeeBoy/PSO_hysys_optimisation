@@ -1,24 +1,10 @@
-# -*- coding: utf-8 -*-
-
 from .Test_Column_ObjFnc import tac_column
 import time
-
-"""
-% -------------------------------------------------------------------------
-%   SIMULATION-BASED OPTIMIZATION OF A SINGLE CONVENTIONAL DISTILLATION 
-%        COLUMN USING THE PARTICLE SWARM OPTIMIZATION ALGORITHM
-%--------------------------------------------------------------------------
-%                                      Juan Javaloyes Antón. Sep 2016 v.3
-%--------------------------------------------------------------------------
-% # 04 # Distillation column model
-%--------------------------------------------------------------------------
-"""
 
 
 def distColumn_model(x, Problem):
     # Independent Variables
     CR = x[0]  # * RR: Reflux Ratio
-    # BR = x[1]  # * BR: Boil up Ratio
     P = x[1]  # * P: Condenser Pressure
 
     NR = x[2]  # * NR: Number of active trays in rectifying section
@@ -60,7 +46,7 @@ def distColumn_model(x, Problem):
 
     # 02 Run Aspen Hysys model with new topology
     HyObject.DistColumn.ColumnFlowsheet.Run()  # Run Aspen Hysy model
-    time.sleep(0.3)
+    time.sleep(0.1)
 
     # 03 Check model convergence
     RunStatus = HyObject.HyApp.ActiveDocument.Flowsheet.Operations.Item(0).ColumnFlowsheet.CfsConverged

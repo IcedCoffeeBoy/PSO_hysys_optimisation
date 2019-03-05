@@ -1,19 +1,5 @@
-# -*- coding: utf-8 -*-
-
 import numpy as np
 import os
-
-"""
-% -------------------------------------------------------------------------
-%   SIMULATION-BASED OPTIMIZATION OF A SINGLE CONVENTIONAL DISTILLATION 
-%        COLUMN USING THE PARTICLE SWARM OPTIMIZATION ALGORITHEM
-%--------------------------------------------------------------------------
-%                                      Juan Javaloyes Antón. Sep 2016 v.3
-%--------------------------------------------------------------------------
-% # 05 # Total Annual Cost
-%--------------------------------------------------------------------------
-"""
-
 
 def tac_column(Problem):
     """
@@ -44,7 +30,7 @@ def tac_column(Problem):
     Qreb = EnergyStream.Qreb.HeatFlow.GetValue('kW')  # Reboiler Duty
 
     # 03 # Run Aspen Hysys Script "Col_diam_V8.SCP" to update column diameter
-    #Problem.HyObject.HyCase.Application.PlayScript(os.path.abspath('Column_Diameter.SCP'))
+    # Problem.HyObject.HyCase.Application.PlayScript(os.path.abspath('Column_Diameter.SCP'))
 
     column_diameter = max(HyObject.HyCase.UtilityObjects.Item('Tray Sizing-1').DiameterValue)  # [m]
 
@@ -62,8 +48,9 @@ def tac_column(Problem):
 
     # * Utility Costs *********************************************************
     WATER = 0.354 * (1 / 1e9) * 3600 * 1e3  # $/GJ [30 ºC to 40-45 ºC] (R.Turton 4º Ed. Table 8.3) ==> [$ /kW·h]
-    STEAM = 14.04 * (1 / 1e9) * 3600 * 1e3  # $/GJ Low Pressure Steam [5barg, 160ºC] (R.Turton 4º Ed. Table 8.3) ==> [$ /kW·h]
-    STEAM_HP = 17.70  * (1 / 1e9) * 3600 * 1e3
+    STEAM = 14.04 * (
+                1 / 1e9) * 3600 * 1e3  # $/GJ Low Pressure Steam [5barg, 160ºC] (R.Turton 4º Ed. Table 8.3) ==> [$ /kW·h]
+    STEAM_HP = 17.70 * (1 / 1e9) * 3600 * 1e3
     YEAR = 8000  # Operating hours per year
 
     # * Equip Cost Constants (K). See Appendix A - R .Turton ******************
@@ -84,7 +71,7 @@ def tac_column(Problem):
     # * Heater ****************************************************************
     Uheater = 820  # [W/(m2 K)] 
     Tstm = 160  # Low Pressure Steam temperature (R.Turton 4º Ed. Table 8.3)
-    Tstm_high = 254 #High Pressure Steam Tempature
+    Tstm_high = 254  # High Pressure Steam Tempature
     # Tower Column
     tray_Spacing = 0.6096  # [m]    
 
@@ -145,7 +132,7 @@ def tac_column(Problem):
     reboiler_area = Qreb / (Uheater * inc_T_reb) * 1e3  # *1e3 porque U esta en W.
 
     # Purchase cost  for base conditions
-    reboiler_Cp0 = 10 ** (Khx[0] + Khx[1] * np.log10(reboiler_area) +  Khx[2] * (np.log10(reboiler_area) ** 2))
+    reboiler_Cp0 = 10 ** (Khx[0] + Khx[1] * np.log10(reboiler_area) + Khx[2] * (np.log10(reboiler_area) ** 2))
 
     # Bare Module cost
     reboiler_CBM_old = reboiler_Cp0 * FBMhx
@@ -167,12 +154,10 @@ def tac_column(Problem):
 
     # ============================================== END TAC calculations #####
 
-
-    # Revenue from selling product PG
+    # *Revenue from selling product PG
     Product_MassFlow = HyObject.MaterialStream.Bottoms.MassFlow.GetValue('kg/h')
-    PG_price = 2645/1e3 #$2,645/tonne PG
+    PG_price = 2645 / 1e3  # $2,645/tonne PG
     PG_sale = Product_MassFlow * PG_price * YEAR * 1e-6
-
 
     class ColumnCost:
         pass
