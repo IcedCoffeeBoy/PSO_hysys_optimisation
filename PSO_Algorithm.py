@@ -6,7 +6,6 @@ from ConventionalDistillationColumn.print_pso import print_results
 
 
 def pso_gbest(objfnc, lb, ub, intVar, *arg):
-
     Problem = arg[0]
 
     # >>>>>>>>>>>>>>>>>>>>>>>>>>[ PSO OPTIONS ]>>>>>>>>>>>>>>>>>>>> User inputs
@@ -131,7 +130,7 @@ def pso_gbest(objfnc, lb, ub, intVar, *arg):
             if n_iter > 1 and iP == pworst_ind:
                 v_new[:, iP] = break_coeff * inertia_w * v[:, iP] + \
                                acceleration_c1 * np.random.rand(1, n_variables) * (
-                                           pbest_x[:, iP] - x[:, iP]) / Red_acceleration_c1 + \
+                                       pbest_x[:, iP] - x[:, iP]) / Red_acceleration_c1 + \
                                acceleration_c2 * np.random.rand(1, n_variables) * (gbest_x - x[:, iP])
             else:
                 v_new[:, iP] = inertia_w * v[:, iP] + \

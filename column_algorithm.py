@@ -1,4 +1,4 @@
-from .Test_Column_ObjFnc import tac_column
+from ConventionalDistillationColumn.Test_Column_ObjFnc import tac_column
 import time
 
 
@@ -44,8 +44,9 @@ def distColumn_model(x, Problem):
     # HyObject.DistColumn.Column.ColumnFlowsheet.Specifications.Item('Boilup Ratio').GoalValue = BR
     ##-------------------------------------------------------------------------------------------------##
 
+
     # 02 Run Aspen Hysys model with new topology
-    HyObject.DistColumn.ColumnFlowsheet.Run()  # Run Aspen Hysy model
+    HyObject.DistColumn.ColumnFlowsheet.Run()  # Run Aspen Hysys model
     time.sleep(0.1)
 
     # 03 Check model convergence
@@ -58,7 +59,7 @@ def distColumn_model(x, Problem):
 
         # 05 Check purity constraints
         PG_purity = 0.95
-        Comp_frac_PG_Bott = HyObject.MaterialStream.Bottoms.ComponentMolarFractionValue[2]
+        Comp_frac_PG_Bott = HyObject.MaterialStream.Bottoms.ComponentMolarFractionValue[3]
 
         w1 = 0
 

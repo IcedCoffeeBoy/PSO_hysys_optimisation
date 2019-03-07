@@ -1,6 +1,7 @@
 import numpy as np
 import os
 
+
 def tac_column(Problem):
     """
     # ### >> Total Annual Cost << Conventional Distillation Column ########
@@ -25,20 +26,21 @@ def tac_column(Problem):
 
     TD = MaterialStream.Distillate.Temperature.GetValue('C')  # Distillate Temperature
     TB = MaterialStream.Bottoms.Temperature.GetValue('C')  # Residue Temperature
+    TF = HyObject.DistColumn.FeedMainTS.Temperature.GetValue('C')  # Feed Temperature
 
     Qcond = EnergyStream.Qcond.HeatFlow.GetValue('kW')  # Condenser duty
     Qreb = EnergyStream.Qreb.HeatFlow.GetValue('kW')  # Reboiler Duty
+    Qpreheat = EnergyStream.Qpreheat.HeatFlow.GetValue('kW')  # Preheating Duty
 
     # 03 # Run Aspen Hysys Script "Col_diam_V8.SCP" to update column diameter
     # Problem.HyObject.HyCase.Application.PlayScript(os.path.abspath('Column_Diameter.SCP'))
 
-    column_diameter = max(HyObject.HyCase.UtilityObjects.Item('Tray Sizing-1').DiameterValue)  # [m]
+    column_diameter = HyObject.DistColumn.Main_TS.ColumnDiameterValue  # [m]
 
-    # >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>><<<< User Inputs
     # # Equipment and Utility Parameter Cost ##################################
 
     # * Global parameters
-    CEPIC_Actual = 576.1  # Annual Index 2014
+    CEPIC_Actual = 567.5  # Annual Index 2017
     CEPIC_2001 = 397  # Base Annual Index
     UpdateFactor = CEPIC_Actual / CEPIC_2001
 
@@ -65,11 +67,11 @@ def tac_column(Problem):
 
     # * Cooler ****************************************************************
     Ucooler = 800  # [W/(m2 K)] 
-    Twin = 30  # Temperatura Entrada Agua Refrigeración Condensador [ºC]
-    Twout = 40  # Temperatura Salida Agua Refrigeración  Condensador [ºC]
+    Twin = 30  # Temperatura Entrada Agua Refrigeración Condenser [ºC]
+    Twout = 40  # Temperatura Salida Agua Refrigeración  Condenser [ºC]
 
     # * Heater ****************************************************************
-    Uheater = 820  # [W/(m2 K)] 
+    Uheater = 820  # [W/(m2 K)]
     Tstm = 160  # Low Pressure Steam temperature (R.Turton 4º Ed. Table 8.3)
     Tstm_high = 254  # High Pressure Steam Tempature
     # Tower Column
@@ -84,13 +86,14 @@ def tac_column(Problem):
 
     # * Steam Cost [$/yr] *****************************************************
     Steam_Cost = Qreb * STEAM_HP * YEAR
+    Preheating_Cost = Qpreheat * STEAM * YEAR
 
     # 05 # Capital Cost ##########################################################
 
     # * Column dimensions
     column_area = np.pi * np.square(column_diameter) / 4  # Sieve area [m2]
-    column_heigh = (3 + NT) * tray_Spacing  # Tower Heigh [m]
-    column_volume = column_area * column_heigh  # Volume Tower [m3]
+    column_height = np.ceil((3 + NT) / 0.7) * tray_Spacing  # Tower Height [m] (0.7 to account for tray efficiency)
+    column_volume = column_area * column_height  # Volume Tower [m3]
 
     # * Column Shell **********************************************************
     # Purchase cost  for base conditions
@@ -138,19 +141,30 @@ def tac_column(Problem):
     reboiler_CBM_old = reboiler_Cp0 * FBMhx
     reboiler_CBM = reboiler_CBM_old * UpdateFactor  # [$] ==================
 
+    # * Preheater  *******************************************************
+    inc_T_preheat = Tstm - TF
+    preheat_area = Qpreheat / (Uheater * inc_T_preheat) * 1e3  # *1e3 porque U esta en W.
+
+    # Purchase cost  for base conditions
+    preheater_Cp0 = 10 ** (Khx[0] + Khx[1] * np.log10(preheat_area) + Khx[2] * (np.log10(preheat_area) ** 2))
+
+    # Bare Module cost
+    preheater_CBM_old = preheater_Cp0 * FBMhx
+    preheater_CBM = preheater_CBM_old * UpdateFactor  # [$] ==================
+
     # 06 # Total Annual Cost #####################################################
 
     # * Total Operating Cost
-    Cop = coolingWater_Cost + Steam_Cost
+    Cop = coolingWater_Cost + Steam_Cost + Preheating_Cost
 
     # * Total Capital Cost
-    Ccap = column_CBM + tray_CBM + condenser_CBM + reboiler_CBM
+    Ccap = column_CBM + tray_CBM + condenser_CBM + reboiler_CBM + preheater_CBM
 
     # * Annualization factor (R. Smith)
-    F = i * (1 + i) ** n / ((1 + i) ** n - 1)
+    # F = i * (1 + i) ** n / ((1 + i) ** n - 1)
 
     # * TAC ===================================================================
-    TAC = (Cop + Ccap * F) * 1e-6  # [MM $/yr]
+    TAC = (Cop + Ccap / 3) * 1e-6  # [MM $/yr]
 
     # ============================================== END TAC calculations #####
 
@@ -168,7 +182,7 @@ def tac_column(Problem):
     ColumnCost.Trays = tray_CBM
     ColumnCost.condenser = condenser_CBM
     ColumnCost.reboiler = reboiler_CBM
-    ColumnCost.F = F
+    # ColumnCost.F = F
     ColumnCost.TAC = TAC - PG_sale
 
     return (ColumnCost)

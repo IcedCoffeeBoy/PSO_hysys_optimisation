@@ -24,8 +24,11 @@ def hy_Dist_Col_Object(Problem, *varargin):
     print(' # Connecting to the Aspen Hysys App ... ')
     HyApp = win32.Dispatch('HYSYS.Application')
 
-    # 03 Open Aspen Hysys File
-    #    HyCase = HyApp.SimulationCases.Open(hyFilePath)
+    # If Hysys cache missing, running this code instead
+    # HyApp = win32.gencache.EnsureDispatch('HYSYS.Application')
+
+    # Open Aspen Hysys File
+    # HyCase = HyApp.SimulationCases.Open(hyFilePath)
 
     HyCase = HyApp.ActiveDocument
 
@@ -73,7 +76,7 @@ def hy_Dist_Col_Object(Problem, *varargin):
     DistColumn.FeedStreams = DistColumn.ColumnFlowsheet.FeedStreams  # Access to Feed Streams (material and energy) for the Column Environment (Main TS, Reboiler y Condenser)
 
     # 08.1.1.1  Access  to Main TS of the distillation column (Column Environment)
-    DistColumn.Main_TS = DistColumn.ColumnFlowsheet.Operations.Item('Main TS')  # Access to Main TS in Column Environment
+    DistColumn.Main_TS = DistColumn.ColumnFlowsheet.Operations.Item('Main Tower')  # Access to Main TS in Column Environment
 
     # 08.1.1.2 Access to Feed stream object of the Main Tray Section
     DistColumn.FeedMainTS = DistColumn.FeedStreams.Item('Feed')
@@ -94,6 +97,7 @@ def hy_Dist_Col_Object(Problem, *varargin):
 
     EnergyStream.Qreb = HyEnergyStream.Item('Qreb')
     EnergyStream.Qcond = HyEnergyStream.Item('Qcond')
+    EnergyStream.Qpreheat = HyEnergyStream.Item('Qpreheat')
 
     # 09 ...: HYSYS OBJECTS :...
     class HyObject:
