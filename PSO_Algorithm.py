@@ -16,7 +16,7 @@ def pso_gbest(objfnc, lb, ub, intVar, *arg):
     maxIter = 30  # maximum number of iterations
     maxFO = 1e5  # maximun number of function evaluations
 
-    maxIterNoImprov = 1e5  # maximun number of iterations without improving the objective function
+    maxIterNoImprov = 1e4  # maximun number of iterations without improving the objective function
     maxTime = 1e5  # time limit in seconds [s] [or np.finfo(np.float64).max for realmax]
 
     tol_x = 1e-5  # tolerance in x (norm 2)

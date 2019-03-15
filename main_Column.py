@@ -8,12 +8,12 @@ hy_filename = 'PG_separation.hsc'
 hy_best_model_filename = 'Best_Solution_Test_Column.hsc'
 
 # # 03 Bounds on the conditional trays
-#      CR    CondP   NR    NS    ND  Feed_Temp
-lb = [0.98, 121.0,   5,    5,    5,   111.2]
-ub = [1.00, 130.0,  30,   30,   30,   140.0]
+#      RR   CondP   NR    NS   Feed  Vapor-flow
+lb = [0.75, 121.1,   5,    5,   140,  350]
+ub = [1.0,  150.0,  30,   30,   150,  450]
 
 # # 04 Integer variables index
-IntVars = [2, 3, 4]
+IntVars = [2, 3]
 
 # # 05 Aspen Hysys Graphical User Interface Visible
 hy_visible = 1  # [1 ==> Visible    0 ==> No Visible]

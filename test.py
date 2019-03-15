@@ -16,8 +16,9 @@ HyObject = hy_Dist_Col_Object(Problem)
 # print(HyObject.MaterialStream.Feed.Temperature.SetValue(100,'C'))
 # HyObject.DistColumn.FeedMainTS.Temperature =100
 # print(HyObject.DistColumn.ColumnFlowsheet.LiquidProducts.Item('Side Draw'))
-print(HyObject.DistColumn.Main_TS.ColumnDiameter)
-print(HyObject.DistColumn.FeedMainTS.Temperature.GetValue('C'))
+print( HyObject.MaterialStream.Vapor)
+
+
 
 
 
