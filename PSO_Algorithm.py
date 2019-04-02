@@ -2,18 +2,17 @@ import numpy as np
 import time
 import datetime as dt
 
-from ConventionalDistillationColumn.print_pso import print_results
+from print_pso import print_results
 
 
-def pso_gbest(objfnc, lb, ub, intVar, *arg):
+def pso_gbest(objfnc, lb, ub, intVar,swarm_size=20, *arg):
     Problem = arg[0]
 
     # >>>>>>>>>>>>>>>>>>>>>>>>>>[ PSO OPTIONS ]>>>>>>>>>>>>>>>>>>>> User inputs
     # * Population size
-    swarm_size = 20  # number of the swarm particles
 
     # * Termination Conditions
-    maxIter = 30  # maximum number of iterations
+    maxIter = 31  # maximum number of iterations
     maxFO = 1e5  # maximun number of function evaluations
 
     maxIterNoImprov = 1e4  # maximun number of iterations without improving the objective function
@@ -44,6 +43,9 @@ def pso_gbest(objfnc, lb, ub, intVar, *arg):
 
     lb_original = np.copy(lb)  # copy of original bounds for plotting
     ub_original = np.copy(ub)
+
+    history = np.zeros((6, n_variables, swarm_size))
+    history_val = np.zeros((6,swarm_size))
 
     # #  Initialization #######################################################
 
@@ -185,7 +187,15 @@ def pso_gbest(objfnc, lb, ub, intVar, *arg):
 
         # 17. Uptdate Control parameters
 
+        if (n_iter % 5 == 0):
+            history[(n_iter//5)-1] = x_plot
+            history_val[(n_iter//5)-1] = fval
+            print((n_iter//5)-1)
+
+
         n_iter = n_iter + 1
+
+
 
         FO_eval = FO_eval + swarm_size
         timeLimit = timeLimit + stop_iter_time
@@ -230,6 +240,8 @@ def pso_gbest(objfnc, lb, ub, intVar, *arg):
         x = np.copy(x_new)
         v = np.copy(v_new)
 
+
+
     # =============================================================================
     #   end while loop
     # =============================================================================
@@ -244,6 +256,8 @@ def pso_gbest(objfnc, lb, ub, intVar, *arg):
     Result.error_x = error_x
     Result.error_fnc = error_fnc
     Result.exit = termination
+    Result.history = history
+    Result.history_val = history_val
 
     return Result
 

@@ -27,9 +27,6 @@ def hy_Dist_Col_Object(Problem, *varargin):
     # If Hysys cache missing, running this code instead
     # HyApp = win32.gencache.EnsureDispatch('HYSYS.Application')
 
-    # Open Aspen Hysys File
-    # HyCase = HyApp.SimulationCases.Open(hyFilePath)
-
     HyCase = HyApp.ActiveDocument
 
     # 04 Aspen Hysys Environment Visible
@@ -58,8 +55,6 @@ def hy_Dist_Col_Object(Problem, *varargin):
 
     # 08 Access to Distillation Column Environment
 
-    #   Interfacing with the Aspen Hysys Objects needed to compute the Total
-    #   Annual Cost of the Conventional Distillation Column #
 
     # 08.1 Access to Hysys Distillation Column and Column  Flowsheet
     Column_Name = HyOperations.Names[0]
@@ -89,7 +84,6 @@ def hy_Dist_Col_Object(Problem, *varargin):
     MaterialStream.Distillate = HyMaterialStream.Item('Distillate')
     MaterialStream.Bottoms = HyMaterialStream.Item('Bottoms')
     MaterialStream.Feed = HyMaterialStream.Item('Feed')
-    # MaterialStream.Side = HyMaterialStream.Item('Side Draw')
     MaterialStream.Vapor = HyMaterialStream.Item('Vapor')
 
 

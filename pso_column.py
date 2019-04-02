@@ -1,25 +1,11 @@
 # -*- coding: utf-8 -*-
 import time
 
-from ConventionalDistillationColumn.hyInterface import hy_Dist_Col_Object
-from ConventionalDistillationColumn.PSO_Algorithm import pso_gbest
-from ConventionalDistillationColumn.column_algorithm import distColumn_model
+from hyInterface import hy_Dist_Col_Object
+from PSO_Algorithm import pso_gbest
+from column_algorithm import distColumn_model
 
-"""
-
-# -------------------------------------------------------------------------
-#   SIMULATION-BASED OPTIMIZATION OF A SINGLE CONVENTIONAL DISTILLATION 
-#        COLUMN USING THE PARTICLE SWARM OPTIMIZATION ALGORITHEM
-#--------------------------------------------------------------------------
-#                                      Juan Javaloyes Antón. Sep 2016 
-#--------------------------------------------------------------------------
-# # 02 # Main function with the calls to Aspen Hysys Objects and PSO
-#--------------------------------------------------------------------------
-
-"""
-
-
-def distCol_optimization(Problem):
+def distCol_optimization(Problem, swarm_size):
     # 01 Interface between Aspen Hysys and Matlab
     HyObject = hy_Dist_Col_Object(Problem)  # from hiInterface
 
@@ -32,7 +18,7 @@ def distCol_optimization(Problem):
 
     t_start = time.time()
 
-    Result = pso_gbest(distColumn_model, lb, ub, IntVars, Problem)  # #### PSO ####
+    Result = pso_gbest(distColumn_model, lb, ub, IntVars,swarm_size, Problem)  # #### PSO ####
 
     t_stop = time.time() - t_start
 
